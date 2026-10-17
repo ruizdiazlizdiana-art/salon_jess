@@ -1,0 +1,557 @@
+/* ==========================================
+   VARIABLES DE COLOR Y FUENTES
+   ========================================== */
+   :root {
+    --color-fondo-app: #f4f6f9; /* Gris muy claro para el fondo */
+    --color-texto-principal: #2c3e50; /* Azul oscuro grisáceo */
+    --color-texto-secundario: #6c757d; /* Gris medio */
+    
+    --color-libre: #ffffff;
+    --color-borde-libre: #ced4da;
+    
+    --color-turno-normal: #20c997; /* Verde agua/menta */
+    --color-sobreturno: #ffc107; /* Amarillo/Dorado */
+    
+    --color-boton-primario: #17a2b8; /* Cyan */
+    --color-boton-secundario: #6c757d; /* Gris */
+    --color-peligro: #dc3545; /* Rojo */
+    
+    --sombra-suave: 0 2px 10px rgba(0,0,0,0.05);
+    --sombra-fuerte: 0 5px 20px rgba(0,0,0,0.15);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #343a40; /* Fondo oscuro de escritorio para centrar la app */
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+/* ==========================================
+   CONTENEDOR PRINCIPAL (Simula la pantalla del celular)
+   ========================================== */
+.mobile-container {
+    width: 100%;
+    max-width: 480px; /* Un poco más ancho para celulares modernos */
+    background-color: var(--color-fondo-app);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: 0 0 30px rgba(0,0,0,0.6);
+    overflow: hidden; /* Evita que el contenido se salga del ancho */
+}
+
+/* ==========================================
+   MINIMAPA (Almanaque superior fijo)
+   ========================================== */
+.minimapa {
+    background-color: #ffffff;
+    padding: 15px 0 5px 0;
+    box-shadow: var(--sombra-suave);
+    z-index: 10;
+    flex-shrink: 0; /* Evita que el header se achique */
+}
+
+.minimapa h2 {
+    text-align: center;
+    font-size: 1.1rem;
+    color: var(--color-texto-principal);
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.dias-grid {
+    display: flex;
+    overflow-x: auto; /* Scroll horizontal */
+    gap: 12px;
+    padding: 0 15px 10px 15px;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch; /* Scroll fluido en iOS */
+}
+
+/* Ocultar barra de scroll en el minimapa */
+.dias-grid::-webkit-scrollbar {
+    display: none;
+}
+
+.dia {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 45px;
+    height: 55px;
+    font-weight: bold;
+    color: var(--color-texto-principal);
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.1s, background-color 0.2s;
+    user-select: none;
+}
+
+.dia:active {
+    background-color: #e2e6ea;
+    transform: scale(0.95);
+}
+
+.dia-nombre-corto {
+    font-size: 0.7rem; 
+    color: var(--color-texto-secundario); 
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+
+.dia-numero {
+    font-size: 1.1rem;
+}
+
+/* Puntos de colores del minimapa */
+.dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-top: 4px;
+}
+.verde { background-color: var(--color-turno-normal); } 
+.amarillo { background-color: var(--color-sobreturno); } 
+.rojo { background-color: var(--color-peligro); } 
+
+/* ==========================================
+   AGENDA INFINITA (Cascada de días)
+   ========================================== */
+.agenda-infinita {
+    flex: 1;
+    overflow-y: auto; /* Scroll vertical */
+    padding: 20px 15px;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
+.dia-agenda {
+    margin-bottom: 35px;
+    background-color: #ffffff;
+    border-radius: 15px;
+    padding: 15px;
+    box-shadow: var(--sombra-suave);
+}
+
+.dia-agenda h3 {
+    font-size: 1.05rem;
+    color: var(--color-texto-principal);
+    border-bottom: 1px solid #e9ecef;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+/* BLOQUES DE HORARIO */
+.bloque-horario {
+    display: flex;
+    align-items: stretch;
+    min-height: 65px;
+    margin-bottom: 12px;
+}
+
+.hora {
+    width: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-texto-secundario);
+    padding-top: 15px;
+    text-align: right;
+    padding-right: 10px;
+}
+
+/* Tarjeta de Espacio Libre */
+.espacio-libre {
+    flex: 1;
+    background-color: var(--color-libre);
+    border: 2px dashed var(--color-borde-libre);
+    border-radius: 12px;
+    color: #adb5bd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    user-select: none;
+}
+
+.espacio-libre:active {
+    background-color: #f8f9fa;
+}
+
+/* Tarjeta de Turno Ocupado (Inyectada vía JS) */
+.turno-ocupado {
+    color: white; 
+    width: 100%; 
+    height: 100%; 
+    border-radius: 12px; 
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
+}
+
+.turno-ocupado strong {
+    font-size: 1rem;
+    margin-bottom: 3px;
+    letter-spacing: 0.3px;
+}
+
+.turno-ocupado span {
+    font-size: 0.85rem;
+    opacity: 0.9;
+}
+
+.etiqueta-sobreturno {
+    font-size: 0.75rem !important; 
+    font-weight: 800; 
+    margin-top: 4px;
+    background-color: rgba(255,255,255,0.3);
+    padding: 2px 6px;
+    border-radius: 4px;
+    align-self: flex-start;
+    text-transform: uppercase;
+}
+
+/* ==========================================
+   MODAL DE CARGA DE TURNOS
+   ========================================== */
+.modal-oculto {
+    display: none !important;
+}
+
+.modal-visible {
+    display: flex;
+    position: fixed;
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    backdrop-filter: blur(3px); /* Efecto cristal */
+    z-index: 100;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+}
+
+.modal-contenido {
+    background-color: #ffffff;
+    width: 100%;
+    max-width: 420px;
+    border-radius: 20px;
+    padding: 25px 20px;
+    box-shadow: var(--sombra-fuerte);
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.modal-header h3 {
+    color: var(--color-texto-principal);
+    font-size: 1.2rem;
+}
+
+.btn-cerrar {
+    background: #f8f9fa;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--color-texto-secundario);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Formulario dentro del Modal */
+#form-nuevo-turno label {
+    display: block;
+    margin-top: 15px;
+    font-size: 0.85rem;
+    color: var(--color-texto-secundario);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+#form-nuevo-turno input[type="text"],
+#form-nuevo-turno select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: var(--color-texto-principal);
+    background-color: #f8f9fa;
+    transition: border-color 0.2s;
+}
+
+#form-nuevo-turno input[type="text"]:focus,
+#form-nuevo-turno select:focus {
+    outline: none;
+    border-color: var(--color-boton-primario);
+    background-color: #ffffff;
+}
+
+/* Layout del buscador de clientas */
+.buscador-layout {
+    display: flex;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.btn-accion {
+    padding: 0 15px;
+    background-color: var(--color-boton-secundario);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Lista desplegable del buscador */
+#lista-resultados-clientas {
+    list-style: none;
+    padding: 0;
+    margin-top: 5px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    max-height: 150px;
+    overflow-y: auto;
+    background-color: white;
+    box-shadow: var(--sombra-suave);
+}
+
+#lista-resultados-clientas li {
+    padding: 12px;
+    border-bottom: 1px solid #f1f3f5;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: var(--color-texto-principal);
+}
+#lista-resultados-clientas li:hover {
+    background-color: #f8f9fa;
+}
+
+/* Toggle (Interruptor) de Sobreturno */
+.toggle-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+}
+
+.toggle-container label {
+    margin-top: 0; /* Resetea el margen superior del label general */
+    color: var(--color-texto-principal);
+}
+
+/* Estilo para el Checkbox del Sobreturno (Más grande) */
+#es-sobreturno {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+/* Botón Guardar Principal */
+.btn-guardar {
+    width: 100%;
+    background-color: var(--color-turno-normal);
+    color: white;
+    border: none;
+    padding: 15px;
+    font-size: 1.05rem;
+    font-weight: bold;
+    border-radius: 12px;
+    margin-top: 25px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-guardar:active {
+    background-color: #1aa179;
+}
+
+/* Caja de Nueva Clienta */
+#campos-nueva-clienta {
+    background-color: #f1f3f5;
+    padding: 15px;
+    border-radius: 12px;
+    margin-top: 15px;
+    border: 1px solid #e9ecef;
+}
+
+#campos-nueva-clienta h4 {
+    color: var(--color-texto-principal);
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+}
+
+#btn-guardar-clienta {
+    width: 100%;
+    background-color: var(--color-boton-primario);
+    color: white;
+    border: none;
+    padding: 12px;
+    margin-top: 15px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+/* ==========================================
+   GANTT Y GRILLA COMPACTA
+   ========================================== */
+/* ==========================================
+   GANTT: BLOQUES DE 3 HORAS (7:30, 10:30, 13:30)
+   ========================================== */
+.dia-gantt-container {
+    position: relative;
+    margin-top: 10px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.fila-fondo {
+    height: 240px; /* 3 horas (80px por hora) */
+    border-bottom: 1px dashed #ced4da;
+    display: flex;
+    align-items: flex-start;
+}
+
+.hora-etiqueta {
+    width: 55px;
+    font-size: 0.8rem;
+    color: #6c757d;
+    font-weight: 600;
+    text-align: right;
+    padding-right: 10px;
+    transform: translateY(-8px); 
+}
+
+.espacio-clic-fondo {
+    flex: 1;
+    height: 100%;
+    cursor: pointer;
+}
+
+.espacio-clic-fondo:active {
+    background-color: #f8f9fa;
+}
+
+/* Contenedor invisible donde flotan los turnos */
+.capa-turnos {
+    position: absolute;
+    top: 0;
+    left: 55px; 
+    right: 0;
+    bottom: 0;
+    pointer-events: none; 
+}
+
+/* Tarjeta del Turno Flotante (Transparente y apilada) */
+.turno-gantt {
+    position: absolute;
+    left: 5px;
+    width: calc(100% - 15px); /* Ocupa todo el ancho siempre */
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: white;
+    pointer-events: auto; 
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    border-left: 4px solid rgba(0,0,0,0.3);
+    opacity: 0.85; /* TRANSPARENCIA para ver el turno de abajo */
+    z-index: 5;
+    mix-blend-mode: multiply; /* Ayuda a mezclar los colores al encimarse */
+}
+
+/* Sobreturno automático se apila más arriba */
+.turno-gantt.es-sobreturno {
+    z-index: 10;
+}
+/* ==========================================
+   VISTA GLOBAL ADMINISTRADORA (JESS / MARIAN)
+   ========================================== */
+.admin-container {
+    max-width: 100%; /* El admin puede usar tablet o PC, le damos más ancho */
+}
+
+.dia-global-wrapper {
+    margin-bottom: 40px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: var(--sombra-suave);
+    overflow: hidden;
+}
+
+.dia-global-header {
+    padding: 15px;
+    background-color: var(--color-texto-principal);
+    color: white;
+    text-transform: capitalize;
+}
+
+/* Contenedor que permite el scroll horizontal de las profesionales */
+.grilla-profesionales-scroll {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    border-top: 1px solid #e9ecef;
+}
+
+/* Columna individual de cada profesional */
+.columna-profesional {
+    min-width: 280px; /* Ancho fijo para que el Gantt funcione bien */
+    border-right: 2px solid #e9ecef;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.nombre-profesional {
+    text-align: center;
+    padding: 10px;
+    background-color: #f8f9fa;
+    font-weight: bold;
+    color: var(--color-texto-principal);
+    border-bottom: 2px solid #ced4da;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}

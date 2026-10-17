@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Control - Jess Salón</title>
+    <link rel="stylesheet" href="assets/css/estilos.css">
+</head>
+<body>
+    <div class="mobile-container admin-container">
+        
+        <!-- HEADER ADMINISTRADOR -->
+        <header class="minimapa">
+            <div style="display: flex; justify-content: space-between; padding: 0 15px;">
+                <h2 id="mes-actual-titulo">...</h2>
+                <!-- Interruptor exclusivo para Jess/Marian para habilitar Miércoles/Domingos[cite: 5, 6] -->
+                <button id="btn-dias-extra" class="btn-accion" style="font-size: 0.8rem;">+ Días Extra</button>
+            </div>
+            <div class="dias-grid" id="contenedor-minimapa"></div>
+        </header>
+
+        <!-- AGENDA INFINITA GLOBAL -->
+        <main class="agenda-infinita" id="contenedor-agenda-global">
+            <!-- JS inyectará el día y las 6 columnas aquí -->
+        </main>
+
+    </div>
+    
+    <script src="assets/js/admin.js"></script>
+</body>
+</html>
